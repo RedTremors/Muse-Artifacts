@@ -6,7 +6,7 @@ Web apps built with Muse, published as static snapshots so they can be opened as
 
 - [Finance Dashboard](finance-dashboard/) - accounts, spending, and cash-flow analytics (snapshot)
 - [Motorcycle Gear Dashboard](motorcycle-gear-dashboard/) - riding gear kit tracker (snapshot)
-- Taiwan Trip Itinerary - publishing shortly
+- [Taiwan Trip Itinerary](taiwan-trip-itinerary/) - completed-trip archive, October 20 to November 1, 2026 (snapshot)
 
 ## Notes
 
