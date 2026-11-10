@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>Job Hunt HQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#eef0ea;
+    --surface:#ffffff;
+    --surface-2:#f6f7f3;
+    --ink:#182230;
+    --ink-2:#46536a;
+    --ink-3:#71809a;
+    --line:#d9ddd2;
+    --line-strong:#c3c9bb;
+    --green:#0e6b4f;
+    --green-bg:#e2f0e9;
+    --rust:#b5441c;
+    --rust-bg:#fbe9e1;
+    --rust-line:#eec4b2;
+    --amber:#8a5a00;
+    --amber-bg:#fdf0d3;
+    --red:#9c2b2b;
+    --red-bg:#f9e6e4;
+    --navy:#14273f;
+    --navy-ink:#eef2f7;
+    --navy-2:#9fb2c8;
+    --shadow:0 1px 2px rgba(24,34,48,.06),0 8px 24px rgba(24,34,48,.05);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0e1216;
+      --surface:#171d24;
+      --surface-2:#1d242e;
+      --ink:#e9edf2;
+      --ink-2:#aeb9c8;
+      --ink-3:#7e8ca0;
+      --line:#2a333f;
+      --line-strong:#374352;
+      --green:#4cc79b;
+      --green-bg:#123128;
+      --rust:#f08a63;
+      --rust-bg:#3a211a;
+      --rust-line:#5c382c;
+      --amber:#eec25e;
+      --amber-bg:#38300f;
+      --red:#f0938d;
+      --red-bg:#38201f;
+      --navy:#0b1622;
+      --navy-ink:#eef2f7;
+      --navy-2:#8fa5bd;
+      --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-size:16px;line-height:1.5;
+  }
+  button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2.25rem}
+  a{color:var(--green)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 16px 56px}
+
+  /* ---------- Masthead band ---------- */
+  .masthead{
+    background:var(--navy);color:var(--navy-ink);
+    margin:0 -16px;padding:26px 16px 22px;
+  }
+  @media(min-width:760px){.masthead{margin:0 -24px;padding:34px 24px 28px;border-radius:0 0 20px 20px}}
+  .masthead .kicker{
+    font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--navy-2);margin:0 0 8px;
+  }
+  .masthead h1{
+    font-family:"Source Serif 4",Georgia,serif;font-weight:700;
+    font-size:clamp(1.7rem,4.5vw,2.6rem);line-height:1.12;margin:0 0 10px;max-width:22ch;
+  }
+  .masthead p.lede{margin:0;color:#c9d5e3;max-width:62ch;font-size:1rem}
+  .masthead p.lede strong{color:#fff}
+
+  .stats{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:20px;
+  }
+  @media(min-width:760px){.stats{grid-template-columns:repeat(5,1fr)}}
+  .stat{
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+    border-radius:12px;padding:12px 14px;
+  }
+  .stat .num{font-family:"IBM Plex Mono",monospace;font-size:1.9rem;font-weight:600;line-height:1;display:block}
+  .stat .lbl{font-size:.78rem;color:var(--navy-2);display:block;margin-top:6px;line-height:1.3}
+  .stat.hot .num{color:#ffb59d}
+  .stat.good .num{color:#7fe0bd}
+
+  .bar{display:flex;height:10px;border-radius:99px;overflow:hidden;margin-top:16px;border:1px solid rgba(255,255,255,.18)}
+  .bar .b-inplay{background:#2f9e77}
+  .bar .b-rej{background:#c65a3a}
+  .bar-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px;font-size:.78rem;color:var(--navy-2);font-family:"IBM Plex Mono",monospace}
+  .bar-legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px}
+
+  /* ---------- Sections ---------- */
+  section{margin-top:34px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+  .sec-head h2{
+    font-family:"Source Serif 4",Georgia,serif;font-size:1.45rem;font-weight:700;margin:0;
+  }
+  .sec-head .tag{
+    font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+    padding:3px 9px;border-radius:99px;border:1px solid var(--line-strong);color:var(--ink-2);
+  }
+  .sec-head .tag.alert{background:var(--rust-bg);border-color:var(--rust-line);color:var(--rust)}
+  .sec-sub{color:var(--ink-2);margin:0 0 16px;max-width:70ch;font-size:.95rem}
+
+  /* ---------- Needs your answer ---------- */
+  .blockers{display:grid;gap:14px}
+  @media(min-width:860px){.blockers{grid-template-columns:1fr 1fr}}
+  .blocker{
+    background:var(--surface);border:1px solid var(--rust-line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:18px 18px 16px;position:relative;
+  }
+  .blocker::before{
+    content:"";position:absolute;left:0;top:14px;bottom:14px;width:4px;border-radius:4px;background:var(--rust);
+  }
+  .blocker .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+  .blocker h3{margin:0;font-size:1.08rem;line-height:1.3}
+  .blocker h3 span{display:block;font-weight:500;color:var(--ink-2);font-size:.92rem;margin-top:2px}
+  .since{
+    font-family:"IBM Plex Mono",monospace;font-size:.7rem;white-space:nowrap;
+    background:var(--rust-bg);color:var(--rust);border-radius:99px;padding:4px 9px;font-weight:600;
+  }
+  .blocker .meta{font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--ink-3);margin:8px 0 10px}
+  .blocker p{margin:0 0 10px;font-size:.93rem;color:var(--ink-2)}
+  .blocker p strong{color:var(--ink)}
+  .q-list{margin:0 0 12px;padding:0;list-style:none}
+  .q-list li{
+    display:flex;gap:9px;padding:9px 11px;background:var(--surface-2);
+    border:1px solid var(--line);border-radius:9px;margin-bottom:7px;font-size:.9rem;
+  }
+  .q-list li b{font-family:"IBM Plex Mono",monospace;color:var(--rust);font-weight:600;flex:none}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 4px}
+  .chips span{font-size:.75rem;border:1px solid var(--line-strong);border-radius:99px;padding:3px 9px;color:var(--ink-2);font-family:"IBM Plex Mono",monospace}
+  .btn{
+    display:inline-flex;align-items:center;gap:7px;min-height:2.5rem;padding:8px 16px;
+    border-radius:9px;background:var(--navy);color:#fff;text-decoration:none;font-weight:600;font-size:.9rem;
+  }
+  .btn:hover{opacity:.9}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line-strong)}
+  .note-fix{font-size:.83rem;color:var(--amber);background:var(--amber-bg);border-radius:8px;padding:8px 11px;margin:0 0 12px}
+
+  .secondary{display:grid;gap:10px;margin-top:14px}
+  @media(min-width:860px){.secondary{grid-template-columns:repeat(3,1fr)}}
+  .mini{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px 15px;box-shadow:var(--shadow);
+  }
+  .mini h4{margin:0 0 3px;font-size:.97rem}
+  .mini .m-meta{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--ink-3);margin-bottom:7px}
+  .mini p{margin:0 0 10px;font-size:.87rem;color:var(--ink-2)}
+  .mini a{font-size:.87rem;font-weight:600;text-decoration:none}
+  .mini a:hover{text-decoration:underline}
+  .mini.skip{border-style:dashed}
+  .mini .verdict{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+
+  /* ---------- Pipeline ---------- */
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+  .chip-btn{
+    border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);
+    border-radius:99px;padding:7px 14px;font:inherit;font-size:.85rem;font-weight:600;cursor:pointer;min-height:2.4rem;
+  }
+  .chip-btn[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+  .search{
+    flex:1 1 200px;display:flex;align-items:center;gap:8px;background:var(--surface);
+    border:1px solid var(--line-strong);border-radius:99px;padding:0 14px;
+  }
+  .search input{border:0;background:transparent;color:var(--ink);font:inherit;font-size:.92rem;width:100%;outline:none;min-height:2.4rem}
+  .count-line{font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--ink-3);margin:0 0 10px}
+
+  .rows{display:grid;gap:7px}
+  .row{
+    display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:start;
+    background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px 14px;
+  }
+  @media(min-width:760px){
+    .row{grid-template-columns:86px 1fr auto auto;align-items:center;gap:14px}
+  }
+  .row .date{font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--ink-3)}
+  .row .who{min-width:0}
+  .row .who .co{font-weight:700;font-size:.96rem}
+  .row .who .ti{display:block;color:var(--ink-2);font-size:.88rem;line-height:1.35}
+  .row .sal{font-family:"IBM Plex Mono",monospace;font-size:.76rem;color:var(--ink-2);text-align:right;max-width:230px}
+  @media(max-width:759px){.row .sal{grid-column:1;text-align:left;max-width:none}}
+  .row .st{display:flex;align-items:center;gap:8px;justify-self:end}
+  .pill{
+    font-family:"IBM Plex Mono",monospace;font-size:.68rem;font-weight:600;letter-spacing:.05em;
+    padding:4px 9px;border-radius:99px;text-transform:uppercase;white-space:nowrap;
+  }
+  .pill.inplay{background:var(--green-bg);color:var(--green)}
+  .pill.rej{background:var(--red-bg);color:var(--red)}
+  .ext{
+    display:inline-flex;align-items:center;justify-content:center;width:2.25rem;height:2.25rem;
+    border-radius:8px;border:1px solid var(--line);color:var(--ink-2);text-decoration:none;font-size:.95rem;
+  }
+  .ext:hover{border-color:var(--line-strong);color:var(--ink)}
+  .empty{
+    display:none;background:var(--surface);border:1px dashed var(--line-strong);border-radius:11px;
+    padding:22px;text-align:center;color:var(--ink-2);font-size:.92rem;
+  }
+
+  /* ---------- Two-col lower ---------- */
+  .lower{display:grid;gap:22px}
+  @media(min-width:900px){.lower{grid-template-columns:1.15fr .85fr;gap:26px}}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:18px;
+  }
+  .card h3{font-family:"Source Serif 4",Georgia,serif;margin:0 0 12px;font-size:1.15rem}
+  .rej-list{list-style:none;margin:0;padding:0}
+  .rej-list li{
+    display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.9rem;
+  }
+  .rej-list li:last-child{border-bottom:0}
+  .rej-list .rc{min-width:0}
+  .rej-list .rc b{font-weight:700}
+  .rej-list .rc span{display:block;color:var(--ink-2);font-size:.83rem}
+  .rej-list .rd{font-family:"IBM Plex Mono",monospace;font-size:.74rem;color:var(--ink-3);white-space:nowrap;padding-top:3px}
+  .rules{list-style:none;margin:0;padding:0;display:grid;gap:0}
+  .rules li{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.9rem;color:var(--ink-2)}
+  .rules li:last-child{border-bottom:0}
+  .rules li b{color:var(--ink);font-weight:700;flex:none;min-width:118px}
+  @media(max-width:480px){.rules li{flex-direction:column;gap:2px}.rules li b{min-width:0}}
+  .timeline{list-style:none;margin:14px 0 0;padding:0}
+  .timeline li{display:flex;gap:11px;padding:7px 0;font-size:.89rem;color:var(--ink-2)}
+  .timeline .td{font-family:"IBM Plex Mono",monospace;font-size:.74rem;color:var(--ink-3);flex:none;width:74px;padding-top:3px}
+  .timeline b{color:var(--ink)}
+
+  footer{margin-top:36px;border-top:1px solid var(--line);padding-top:14px;color:var(--ink-3);font-size:.8rem}
+  footer p{margin:0 0 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Masthead -->
+  <div class="masthead">
+    <p class="kicker">Justin Chu · Dublin, CA · Snapshot as of Tue, Nov 10, 2026</p>
+    <h1>Where the $90K+ search stands</h1>
+    <p class="lede">Six weeks in, the pipeline is wide and quiet: <strong>73 applications are still in play</strong> with no reply yet, and no interview has been recorded in the tracker. The only things actually stuck are <strong>two finished applications waiting on answers only you can give</strong>, below.</p>
+
+    <div class="stats">
+      <div class="stat"><span class="num">92</span><span class="lbl">Applications submitted, Sep 27 to Nov 9</span></div>
+      <div class="stat good"><span class="num">73</span><span class="lbl">In play: submitted, no response recorded yet</span></div>
+      <div class="stat"><span class="num">19</span><span class="lbl">Closed as rejected in the tracker</span></div>
+      <div class="stat"><span class="num">0</span><span class="lbl">Interviews recorded so far</span></div>
+      <div class="stat hot"><span class="num">2</span><span class="lbl">Finished forms blocked on your answers</span></div>
+    </div>
+
+    <div class="bar" role="img" aria-label="Pipeline split: 73 in play, 19 rejected">
+      <div class="b-inplay" style="width:79.3%"></div>
+      <div class="b-rej" style="width:20.7%"></div>
+    </div>
+    <div class="bar-legend">
+      <span><i style="background:#2f9e77"></i>In play · 79%</span>
+      <span><i style="background:#c65a3a"></i>Rejected · 21%</span>
+      <span>Daily batch: 2 verified roles, 9:00 AM PT</span>
+    </div>
+  </div>
+
+  <!-- Needs your answer -->
+  <section aria-labelledby="needs-h">
+    <div class="sec-head">
+      <h2 id="needs-h">Needs your answer</h2>
+      <span class="tag alert">Only you can move these</span>
+    </div>
+    <p class="sec-sub">Both forms below are completely filled: resume, cover letter, and every truthful screening answer are in. Each one stopped on a question the no-guessing rule would not let an assistant answer for you. Open the posting, finish the last field, and submit.</p>
+
+    <div class="blockers">
+      <article class="blocker">
+        <div class="top">
+          <h3>Pebl <span>Senior Accountant</span></h3>
+          <span class="since">Blocked Nov 7</span>
+        </div>
+        <p class="meta">$100,000–$120,000 + equity · Remote US · Ashby</p>
+        <p>The submit attempt came back with <strong>“Your form needs corrections”</strong> on exactly two required questions:</p>
+        <ul class="q-list">
+          <li><b>Q1</b><span><strong>Notice period with your current employer.</strong> Pick one:</span></li>
+        </ul>
+        <div class="chips">
+          <span>Available immediately</span><span>1 week</span><span>2 weeks</span><span>4 weeks</span><span>6 weeks</span><span>8 weeks+</span>
+        </div>
+        <ul class="q-list" style="margin-top:10px">
+          <li><b>Q2</b><span><strong>Applicant Consent &amp; Acknowledgment.</strong> A single “I consent” option covering collection and processing of your personal data, <strong>recording of skills assessments and interviews including biometric information</strong>, use for verification and fraud prevention, with data retained up to 6 months.</span></li>
+        </ul>
+        <a class="btn" href="https://jobs.ashbyhq.com/pebl/f5dc2098-8d1c-42c1-b989-7adeb61b2c2f" target="_blank" rel="noopener">Open the Pebl application ↗</a>
+      </article>
+
+      <article class="blocker">
+        <div class="top">
+          <h3>OI Infusion Services <span>Senior Accountant, Corporate Accounting</span></h3>
+          <span class="since">Blocked Nov 4</span>
+        </div>
+        <p class="meta">Desired salary entered: $95,000–$110,000 · Remote · JazzHR</p>
+        <p>One required field was left blank, so no submission was attempted:</p>
+        <ul class="q-list">
+          <li><b>Q1</b><span><strong>“If selected, when would you be available to start?”</strong> Enter your start date, then clear the reCAPTCHA check to submit.</span></li>
+        </ul>
+        <p class="note-fix">If you complete it by hand, fix two under-claims first: Power Query and Macros were left unchecked in the Excel question, and multi-entity / intercompany accounting was left unchecked, even though both are squarely in your E&amp;E experience.</p>
+        <a class="btn" href="https://oiinfusionservicesllc.applytojob.com/apply/gMjhUWyTm7/Senior-Accountant-Corporate-Accounting-Remote" target="_blank" rel="noopener">Open the OI Infusion application ↗</a>
+      </article>
+    </div>
+
+    <h3 style="font-family:'Source Serif 4',Georgia,serif;font-size:1.1rem;margin:22px 0 4px">Also on you, smaller and older</h3>
+    <p class="sec-sub" style="margin-bottom:12px">Not finished forms, but each one still needs something only you can supply, or a call only you can make.</p>
+    <div class="secondary">
+      <article class="mini">
+        <h4>Branch: identity check</h4>
+        <p class="m-meta">Senior Accountant · $120K–$130K · Submitted Sep 28</p>
+        <p>Branch emailed a Persona identity-verification link with the note that the application will not be considered until it is done. It needs your government ID, so it has to be you.</p>
+        <a href="https://job-boards.greenhouse.io/branch/jobs/7978805003" target="_blank" rel="noopener">View the Branch posting ↗</a>
+      </article>
+      <article class="mini">
+        <h4>KnowBe4: one checklist</h4>
+        <p class="m-meta">Total Rewards Analyst · $95K–$115K · Blocked Oct 12</p>
+        <p>The form is filled but validation stops on “How well do you know us?”: a checklist of where you researched KnowBe4 (Indeed, Glassdoor, their blog, social, and so on). No truthful answer was on file.</p>
+        <a href="https://job-boards.greenhouse.io/knowbe4/jobs/8794554002" target="_blank" rel="noopener">View the KnowBe4 posting ↗</a>
+      </article>
+      <article class="mini skip">
+        <h4>Abnormal AI: leave it</h4>
+        <p class="m-meta">Senior Revenue Accountant · $95.6K–$137.5K · Blocked Nov 8</p>
+        <p>Four required essays ask for hands-on revenue accounting and ASC 606 contract work. That experience is not in your background, so there is no truthful way to finish this one.</p>
+        <span class="verdict">Recommendation: skip</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- Pipeline -->
+  <section aria-labelledby="pipe-h">
+    <div class="sec-head">
+      <h2 id="pipe-h">The full pipeline</h2>
+      <span class="tag">92 rows · tracker order, newest first</span>
+    </div>
+    <p class="sec-sub">Every submitted application from the tracker. “In play” means the tracker still shows it as submitted with no response recorded; most were email-confirmed on submission, a few were confirmed on the posting page only. Nothing here has been marked as an interview yet.</p>
+
+    <div class="controls" role="group" aria-label="Filter applications">
+      <button class="chip-btn" data-filter="all" aria-pressed="true">All · 92</button>
+      <button class="chip-btn" data-filter="inplay" aria-pressed="false">In play · 73</button>
+      <button class="chip-btn" data-filter="rejected" aria-pressed="false">Rejected · 19</button>
+      <button class="chip-btn" data-filter="nov" aria-pressed="false">November</button>
+      <button class="chip-btn" data-filter="oct" aria-pressed="false">October</button>
+      <label class="search">
+        <span aria-hidden="true">⌕</span>
+        <input id="q" type="search" placeholder="Search company or title…" aria-label="Search company or title" />
+      </label>
+    </div>
+    <p class="count-line" id="countLine"></p>
+    <div class="rows" id="rows"></div>
+    <div class="empty" id="empty">No applications match that search. Try a shorter company name.</div>
+  </section>
+
+  <!-- Lower two columns -->
+  <div class="lower">
+    <section aria-labelledby="rej-h" style="margin-top:0">
+      <div class="card">
+        <h3 id="rej-h">Rejections at a glance · 19</h3>
+        <ul class="rej-list" id="rejList"></ul>
+      </div>
+    </section>
+
+    <section aria-labelledby="rules-h" style="margin-top:0">
+      <div class="card">
+        <h3 id="rules-h">How the search is run</h3>
+        <ul class="rules">
+          <li><b>Target</b><span>$90,000+ and permanent only. No temp or contract roles.</span></li>
+          <li><b>Only hard no</b><span>A required CPA (or CFA). Everything else loosely matching your background gets an application, answered truthfully.</span></li>
+          <li><b>Scope</b><span>Any finance role: accounting, financial analyst, payroll analyst, compensation analyst, and similar.</span></li>
+          <li><b>Skipped outright</b><span>Lever postings, Workday applications, and Ross Stores.</span></li>
+          <li><b>Location</b><span>Remote US first. Onsite or hybrid only within a workable Dublin commute.</span></li>
+          <li><b>Cadence</b><span>Daily batch at 9:00 AM PT, 2 verified roles, one attempt each, confirmation email checked before moving on.</span></li>
+          <li><b>Your profile</b><span>Junior GL Accountant, E&amp;E Co., Ltd. · B.A. Economics, minor Statistics, UC Davis 2022 · GL owner for 2 entities, 500+ employee salary and benefits allocation.</span></li>
+        </ul>
+
+        <h3 style="margin-top:20px">Latest week</h3>
+        <ul class="timeline">
+          <li><span class="td">Nov 9</span><span><b>Ohalo, Accounting Manager</b> ($100K–$170K) submitted and email-confirmed.</span></li>
+          <li><span class="td">Nov 8</span><span><b>Attivo Partners, Senior Accountant</b> submitted; a second Attivo role (Web3 Practice) was rejected Nov 4.</span></li>
+          <li><span class="td">Nov 7</span><span><b>Hims &amp; Hers, Category Finance</b> submitted. <b>Pebl</b> blocked on your two answers.</span></li>
+          <li><span class="td">Nov 6</span><span><b>Unbounce, FP&amp;A (AI First)</b> submitted and confirmed.</span></li>
+          <li><span class="td">Nov 5</span><span><b>AcuityMD</b> rejection received, applied Nov 5, decided Nov 6.</span></li>
+          <li><span class="td">Nov 4</span><span><b>OI Infusion</b> blocked on a start date. <b>Splitero, Senior Accountant</b> submitted.</span></li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>Snapshot built Tue, Nov 10, 2026 from your application tracker (job-applications.xlsx, 92 rows) and the applied-roles log. Statuses reflect the tracker at build time; new applications and replies land in the Job Hunt chat and the tracker first, and this page updates on its next rebuild.</p>
+    <p>Application forms use redtremors1@gmail.com, per your standing rule. Your resume keeps jchu428@gmail.com as its printed contact.</p>
+  </footer>
+</div>
+
+<script>
+var APPS = [{"d": "2026-11-09", "c": "Ohalo", "t": "Accounting Manager", "loc": "Remote (Pacific/Mountain/Central time zones; South San Francisco travel ~2 days/month)", "sal": "$100,000 - $170,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/ohalogenetics/jobs/4748565005"}, {"d": "2026-11-08", "c": "Attivo Partners", "t": "Senior Accountant", "loc": "Remote (work from home; SF Bay Area preference)", "sal": "$100,000-$115,000 + bonus", "st": "Submitted", "link": "https://job-boards.greenhouse.io/attivopartners/jobs/4014522006"}, {"d": "2026-11-07", "c": "Hims & Hers", "t": "Financial Analyst, Category Finance", "loc": "Remote, United States", "sal": "$110,000-$130,000 + equity", "st": "Submitted", "link": "https://jobs.ashbyhq.com/hims-and-hers/1572eb6e-2cb2-4603-ad6b-19eb7a02249d"}, {"d": "2026-11-06", "c": "Unbounce", "t": "Senior Financial Analyst, FP&A (AI First)", "loc": "Remote, Canada or US", "sal": "$100,000-$120,000 USD", "st": "Submitted", "link": "https://job-boards.greenhouse.io/unbounce/jobs/5415525008"}, {"d": "2026-11-05", "c": "AcuityMD", "t": "Senior Revenue Accountant", "loc": "Remote, United States (remote-first)", "sal": "$100,000-$130,000", "st": "Rejected", "link": "https://job-boards.greenhouse.io/acuitymd/jobs/6232431004"}, {"d": "2026-11-04", "c": "Splitero", "t": "Senior Accountant", "loc": "Remote", "sal": "$110,000-$125,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/splitero/jobs/5455781008"}, {"d": "2026-11-03", "c": "Crux", "t": "Senior Accountant", "loc": "Remote (US)", "sal": "$120,000 - $140,000", "st": "Submitted", "link": "https://www.crux.com/careers?ashby_jid=8ca619a2-0179-4bef-b27e-22804b383c38#positions"}, {"d": "2026-11-02", "c": "Clover Health", "t": "Senior Compensation & Stock Analyst", "loc": "Remote, United States (remote-first)", "sal": "$92,000-$120,000", "st": "Rejected", "link": "https://job-boards.greenhouse.io/cloverhealth/jobs/7983881"}, {"d": "2026-11-02", "c": "Frontline Wildfire Defense", "t": "Senior Accountant", "loc": "Remote, United States (PST/MST)", "sal": "$95,000-$115,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/frontlinewildfire/jobs/4451377009"}, {"d": "2026-11-01", "c": "Webflow", "t": "Financial Analyst, GTM", "loc": "Remote, United States", "sal": "$112,000 - $135,000 (Zone A; posting does not explicitly map zones to locations)", "st": "Rejected", "link": "https://jobs.ashbyhq.com/webflow/3548f980-3426-4a0a-9016-d0934b9985c2/application"}, {"d": "2026-10-19", "c": "Vanta", "t": "Senior Data Analyst, Strategic Finance", "loc": "Remote, United States", "sal": "$133,000\u2013$156,000 + equity", "st": "Submitted", "link": "https://jobs.ashbyhq.com/vanta/0fab2072-8863-42ec-b00d-de367b90d937"}, {"d": "2026-10-17", "c": "Precision Medicine Group", "t": "Senior Manager, Operational Finance", "loc": "Remote, United States", "sal": "$121,000\u2013$160,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/precisionmedicinegroup/jobs/6217754004"}, {"d": "2026-10-17", "c": "Precision Medicine Group", "t": "FP&A Manager", "loc": "Remote, United States", "sal": "$100,000\u2013$130,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/precisionmedicinegroup/jobs/6127478004"}, {"d": "2026-10-16", "c": "EvenUp", "t": "Senior Manager, Accounting", "loc": "Remote - US", "sal": "$152K-$179K (US-Remote) + equity", "st": "Submitted", "link": "https://jobs.ashbyhq.com/evenup/404f9185-e998-4cfa-b064-70047bc0d591"}, {"d": "2026-10-16", "c": "EvenUp", "t": "Senior Financial Analyst, Corporate Consolidation & G&A", "loc": "Remote - US", "sal": "$131K-$155K (US-National Remote) + equity", "st": "Submitted", "link": "https://jobs.ashbyhq.com/evenup/451f2ec7-fbe0-40a6-a4cd-a203d03034a2"}, {"d": "2026-10-16", "c": "Morning Consult", "t": "Senior Manager, FP&A", "loc": "Remote - US", "sal": "$124,900-$205,500", "st": "Submitted", "link": "https://jobs.ashbyhq.com/morningconsult/201ce866-93dc-4e48-99fa-4f525e85fd84"}, {"d": "2026-10-16", "c": "ClickHouse", "t": "Senior Revenue Accountant", "loc": "Remote - US", "sal": "Tier 1 $160K-$200K", "st": "Submitted", "link": "https://jobs.ashbyhq.com/clickhouse/8ea8a116-f05f-4f5a-98f5-2c6ffde7c2ad"}, {"d": "2026-10-15", "c": "Mercury", "t": "Senior Data Analyst, Reconciliation", "loc": "Remote (US); SF Bay Area band", "sal": "$192,300-$235,100", "st": "Submitted", "link": "https://job-boards.greenhouse.io/mercury/jobs/6186428004"}, {"d": "2026-10-15", "c": "Mercury", "t": "Treasury Operations Analyst", "loc": "Remote (US); SF Bay Area band", "sal": "$121,700-$152,100", "st": "Submitted", "link": "https://job-boards.greenhouse.io/mercury/jobs/6221673004"}, {"d": "2026-10-15", "c": "Monarch Money", "t": "Senior FP&A Analyst", "loc": "Remote (US)", "sal": "$140,000-$160,000 base + bonus", "st": "Submitted", "link": "https://jobs.ashbyhq.com/monarchmoney/b3258df5-6829-4538-82f6-de002cd0dc53"}, {"d": "2026-10-15", "c": "Omni", "t": "Senior Accountant", "loc": "Remote (US)", "sal": "$130,000-$160,000 + equity", "st": "Submitted", "link": "https://jobs.ashbyhq.com/omni/08c32870-cb92-485c-a047-1367b067d36d"}, {"d": "2026-10-14", "c": "Everlaw", "t": "Senior Financial Analyst", "loc": "Hybrid, Oakland CA", "sal": "$120,000-$152,000", "st": "Rejected", "link": "https://job-boards.greenhouse.io/everlaw/jobs/4718689006"}, {"d": "2026-10-14", "c": "Samsara", "t": "Senior Manager, Revenue Accounting", "loc": "Remote", "sal": "$107,240-$153,200", "st": "Rejected", "link": "https://www.samsara.com/company/careers/roles/7266397?gh_jid=7266397"}, {"d": "2026-10-14", "c": "Honeycomb", "t": "Senior Financial Analyst", "loc": "Remote", "sal": "$125,000-$170,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/honeycomb/jobs/5424906008"}, {"d": "2026-10-14", "c": "MacroHealth", "t": "Senior Financial Analyst, FP&A", "loc": "Remote", "sal": "$120,000-$140,000", "st": "Submitted", "link": "https://jobs.ashbyhq.com/macrohealth/6b222905-0eca-4e89-9fd0-ace37960ab57"}, {"d": "2026-10-14", "c": "Serve Robotics", "t": "Financial Analyst, FP&A", "loc": "Remote (US)", "sal": "$100,000-$125,000 + equity", "st": "Submitted", "link": "https://jobs.ashbyhq.com/serverobotics/c3597c6d-ba18-4635-a67f-bd06f037465f"}, {"d": "2026-10-14", "c": "Smalls", "t": "Financial Analyst, FP&A", "loc": "Remote (US)", "sal": "$110,000-$130,000 + equity", "st": "Submitted", "link": "https://jobs.ashbyhq.com/smalls/14aaa214-ab3e-4061-95dd-1846e41d835a"}, {"d": "2026-10-14", "c": "Equip Health", "t": "Senior Accountant", "loc": "Remote (US)", "sal": "$96,000-$120,000 + bonus", "st": "Submitted", "link": "https://jobs.ashbyhq.com/equip/caaf033c-ac54-488d-86be-41570369da00"}, {"d": "2026-10-13", "c": "WelbeHealth", "t": "Senior Accountant, Reporting", "loc": "Remote USA", "sal": "$90,281.44-$119,171.49 base + bonus", "st": "Submitted", "link": "https://job-boards.greenhouse.io/welbehealth/jobs/8722580002"}, {"d": "2026-10-13", "c": "2U", "t": "Senior Manager, Corporate FP&A", "loc": "Remote US", "sal": "$125,000-$150,000 base + bonus", "st": "Rejected", "link": "https://job-boards.greenhouse.io/2u/jobs/8871017002"}, {"d": "2026-10-13", "c": "Mozilla", "t": "Senior Financial Analyst, Core Services", "loc": "Remote US", "sal": "$102,000-$136,000 (Tier 1)", "st": "Rejected", "link": "https://job-boards.greenhouse.io/mozilla/jobs/8227899"}, {"d": "2026-10-12", "c": "Delinea", "t": "Senior Accountant", "loc": "Remote (US)", "sal": "$110,000 - $125,000", "st": "Submitted", "link": "https://jobs.ashbyhq.com/delinea/e9f328f7-299e-4b09-9c01-138a0bdb2345"}, {"d": "2026-10-12", "c": "Gong", "t": "Corporate FP&A Manager", "loc": "Hub cities (Austin/Chicago/NYC/SLC/SF)", "sal": "$149K-$175K", "st": "Submitted", "link": "https://job-boards.greenhouse.io/gongio/jobs/4691062006"}, {"d": "2026-10-12", "c": "Point", "t": "Senior Accountant", "loc": "Remote (US)", "sal": "$114,000 - $126,000", "st": "Rejected", "link": "https://point.com/careers/job/senior-accountant-8870970002"}, {"d": "2026-10-11", "c": "Reddit", "t": "International Payroll Analyst", "loc": "Remote (US)", "sal": "$105,400 - $147,500", "st": "Submitted", "link": "https://job-boards.greenhouse.io/reddit/jobs/8192369"}, {"d": "2026-10-11", "c": "Apollo.io", "t": "Manager, Corporate FP&A", "loc": "Remote (US)", "sal": "$159,000 - $198,700 (SF tier; $138,200 - $172,700 second tier)", "st": "Submitted", "link": "https://job-boards.greenhouse.io/apolloio/jobs/6221554004"}, {"d": "2026-10-11", "c": "Human Interest", "t": "Financial Systems Manager", "loc": "Remote (US)", "sal": "$145,000 - $165,000", "st": "Rejected", "link": "https://job-boards.greenhouse.io/humaninterest/jobs/8190494"}, {"d": "2026-10-11", "c": "Nordic Naturals", "t": "Senior Business Intelligence Analyst, Procurement", "loc": "Remote (US) or Watsonville CA", "sal": "$90,000 - $115,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/nordicnaturals/jobs/4389969009"}, {"d": "2026-10-11", "c": "Hims & Hers", "t": "Manager, Strategic Finance - Planning Systems", "loc": "Remote (US)", "sal": "$140,000 - $170,000", "st": "Submitted", "link": "https://jobs.ashbyhq.com/hims-and-hers/3d939a66-5f86-4315-a7f3-23d18f9421e9"}, {"d": "2026-10-11", "c": "Hims & Hers", "t": "Senior Financial Analyst, Technology", "loc": "Remote (US)", "sal": "$120,000 - $140,000", "st": "Submitted", "link": "https://jobs.ashbyhq.com/hims-and-hers/67fb3ae8-e942-4fcc-ad20-ad01942ce4f1"}, {"d": "2026-10-11", "c": "Hims & Hers", "t": "Financial Analyst, FP&A", "loc": "Remote (US)", "sal": "$100,000 - $125,000", "st": "Submitted", "link": "https://jobs.ashbyhq.com/hims-and-hers/6eff27fe-a41b-4643-8b2f-3f153ff8508e"}, {"d": "2026-10-10", "c": "ClickUp", "t": "Staff Analyst, GTM", "loc": "Remote (US)", "sal": "$169,000 - $211,000 (offers equity)", "st": "Submitted", "link": "https://jobs.ashbyhq.com/clickup/65ad1097-40f8-466d-aaaf-cc40b9521c74"}, {"d": "2026-10-10", "c": "Headway", "t": "Strategic Finance Manager", "loc": "Remote (US)", "sal": "$152,000 - $200,000 (offers equity)", "st": "Submitted", "link": "https://jobs.ashbyhq.com/headway/80b9e9d6-bcc7-499d-bc91-d5ca5ec3fdcd"}, {"d": "2026-10-10", "c": "BaubleBar", "t": "Assistant Controller", "loc": "Remote (Anywhere)", "sal": "$155,000 - $170,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/baublebar/jobs/8191844"}, {"d": "2026-10-10", "c": "Human Interest", "t": "Sales Strategy & Operations, Senior Analyst", "loc": "Remote (US)", "sal": "$95,000 - $105,000", "st": "Rejected", "link": "https://job-boards.greenhouse.io/humaninterest/jobs/8231614"}, {"d": "2026-10-10", "c": "Kinder's", "t": "Senior Cost Accountant", "loc": "Walnut Creek, CA", "sal": "$105,000 - $115,000", "st": "Rejected", "link": "https://job-boards.greenhouse.io/kinders/jobs/5447231008"}, {"d": "2026-10-08", "c": "Saatva", "t": "Financial Analyst", "loc": "Remote", "sal": "$90,000 - $100,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/saatva/jobs/4432641009"}, {"d": "2026-10-08", "c": "Human Interest", "t": "Senior Financial Analyst, GTM", "loc": "Remote (US)", "sal": "$100,000 - $130,000", "st": "Rejected", "link": "https://job-boards.greenhouse.io/humaninterest/jobs/8238707"}, {"d": "2026-10-08", "c": "Kasa", "t": "Property Portfolio Finance Manager", "loc": "Remote", "sal": "$115,000 - $130,000", "st": "Rejected", "link": "https://job-boards.greenhouse.io/kasa/jobs/7776262003"}, {"d": "2026-10-08", "c": "Sidecar Health", "t": "Senior Accountant, Financial Reporting", "loc": "Remote", "sal": "$100,000 - $120,000", "st": "Rejected", "link": "https://job-boards.greenhouse.io/sidecarhealth/jobs/6203707004"}, {"d": "2026-10-07", "c": "Infisical", "t": "Strategic Finance", "loc": "Remote (US, Canada)", "sal": "$140,000 - $200,000", "st": "Submitted", "link": "https://jobs.ashbyhq.com/infisical/57c2d237-583e-4c56-a8a2-69defd871fed"}, {"d": "2026-10-07", "c": "GHX", "t": "Strategic Financial Analyst, Corporate Strategy & Development", "loc": "Remote (US)", "sal": "$128,000 - $170,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/globalhealthcareexchangeinc/jobs/4733291005"}, {"d": "2026-10-05", "c": "ClickUp", "t": "Strategic Finance Manager", "loc": "Remote (US)", "sal": "$123K-$160K", "st": "Rejected", "link": "https://jobs.ashbyhq.com/clickup/abf2b712-b509-4ee4-89b0-770cf2dd5902"}, {"d": "2026-10-05", "c": "Headway", "t": "Senior Manager, Accounting", "loc": "Remote (US)", "sal": "Zone A $163,200-$204,000", "st": "Submitted", "link": "https://jobs.ashbyhq.com/headway/f2437c6e-22ab-479f-9c1d-52f61bbb6e73"}, {"d": "2026-10-05", "c": "Worldly", "t": "Senior Manager/Director, Finance", "loc": "Remote (US)", "sal": "$160,000-$200,000", "st": "Submitted", "link": "https://jobs.ashbyhq.com/worldly/abf89e7f-b8a3-4263-b77e-a4df392a8925"}, {"d": "2026-10-05", "c": "Zapier", "t": "Finance Manager, Marketing", "loc": "Remote - North America", "sal": "$158.3K-$237.5K", "st": "Rejected", "link": "https://jobs.ashbyhq.com/zapier/cb1aec2c-05cd-4598-8117-bd1f7ed9a49f"}, {"d": "2026-10-05", "c": "NerdWallet", "t": "Senior Financial Analyst", "loc": "Remote (US)", "sal": "$92K-$150K", "st": "Submitted", "link": "https://www.nerdwallet.com/careers/jobs?ashby_jid=94bff1f4-c247-4b49-825a-7d21f47ddb93"}, {"d": "2026-10-04", "c": "Affirm", "t": "Senior Manager, Financial Systems", "loc": "Remote (US)", "sal": "$195K-$255K (other states) / $220K-$280K (CA tier)", "st": "Submitted", "link": "https://job-boards.greenhouse.io/affirm/jobs/7983767003"}, {"d": "2026-10-04", "c": "Elastic", "t": "Sr. Manager, Finance Transformation (Cloud and Marketplaces)", "loc": "Remote (US)", "sal": "$135.7K-$214.7K", "st": "Rejected", "link": "https://jobs.elastic.co/jobs/finance-it-operations/united-states/sr-manager-finance-transformation-cloud-and-marketplaces-/8157211?gh_jid=8157211"}, {"d": "2026-10-04", "c": "Netlify", "t": "Finance Manager (Corporate Finance)", "loc": "Remote (US)", "sal": "$123K-$166K", "st": "Submitted", "link": "https://job-boards.greenhouse.io/netlify/jobs/8823513002"}, {"d": "2026-10-03", "c": "Mitratech", "t": "Senior Accountant - General Ledger", "loc": "Remote (US)", "sal": "$90K-$110K", "st": "Submitted", "link": "https://job-boards.greenhouse.io/mitratech/jobs/8220772"}, {"d": "2026-10-03", "c": "Apollo.io", "t": "Senior Manager, Finance & Strategy - Go-To-Market", "loc": "Remote (US)", "sal": "$159K-$200K (Tier 2 total cash)", "st": "Rejected", "link": "https://job-boards.greenhouse.io/apolloio/jobs/6214348004"}, {"d": "2026-10-03", "c": "Sift", "t": "Staff Accountant", "loc": "Remote (USA)", "sal": "$100K-$135K", "st": "Submitted", "link": "https://jobs.ashbyhq.com/sift/b7f8c68c-41e5-4c7f-8308-e18bdfc855bf/application"}, {"d": "2026-10-03", "c": "Planet Labs", "t": "Senior FP&A Revenue Manager", "loc": "Remote (US)", "sal": "$120,900-$151,100 (CA tier)", "st": "Submitted", "link": "https://job-boards.greenhouse.io/planetlabs/jobs/7527437#application_form"}, {"d": "2026-10-03", "c": "hims & hers", "t": "Senior Financial Analyst, Corporate FP&A", "loc": "Remote (US)", "sal": "$120K-$140K", "st": "Submitted", "link": "https://jobs.ashbyhq.com/hims-and-hers/28178348-f8b4-4a59-8c1e-448bfb743fa8"}, {"d": "2026-10-02", "c": "KoBold Metals", "t": "Senior Manager, Finance", "loc": "Remote (US)", "sal": "$175,000 - $210,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/koboldmetals/jobs/4704644005"}, {"d": "2026-10-02", "c": "Motive", "t": "Lead FP&A Analyst", "loc": "Remote (US)", "sal": "$93,000 - $128,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/gomotive/jobs/8782062002"}, {"d": "2026-10-02", "c": "Fanatics Betting & Gaming", "t": "Accounting Manager (US - Remote)", "loc": "Remote (US)", "sal": "$100,000 - $150,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/fanaticsfbg/jobs/4258863009"}, {"d": "2026-10-02", "c": "\u014cura", "t": "Revenue Accounting Manager", "loc": "Remote (US)", "sal": "$143,650 - $169,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/oura/jobs/4377433009"}, {"d": "2026-10-02", "c": "Counterpart", "t": "Accounting Manager", "loc": "Remote (US)", "sal": "$130,000 - $150,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/counterpart/jobs/4727571005"}, {"d": "2026-10-01", "c": "OnPay", "t": "Senior GTM & Performance Analyst", "loc": "Remote (US)", "sal": "$110,000-$140,000 base", "st": "Submitted", "link": "https://careers.onpay.com/jobs/8437316-senior-gtm-performance-analyst"}, {"d": "2026-10-01", "c": "Motive", "t": "Senior Analyst, Strategic Analytics", "loc": "Remote (US)", "sal": "$129,000-$177,000", "st": "Submitted", "link": "https://job-boards.greenhouse.io/gomotive/jobs/8590413002"}, {"d": "2026-09-30", "c": "Lob", "t": "Senior Accountant", "loc": "Remote US", "sal": "$112.5K-$125K", "st": "Submitted", "link": "https://www.lob.com/careers/apply?gh_jid=8180341"}, {"d": "2026-09-30", "c": "NetBox Labs", "t": "Senior Accountant / Accounting Manager", "loc": "Remote US", "sal": "$130K-$150K", "st": "Submitted", "link": "https://jobs.ashbyhq.com/netboxlabs/31363e95-859f-4b16-bdf9-3a70e3bc6ea9/application"}, {"d": "2026-09-30", "c": "Donorbox", "t": "Senior Accountant", "loc": "Remote US", "sal": "$120K-$135K", "st": "Submitted", "link": "https://job-boards.greenhouse.io/donorbox/jobs/4715433005"}, {"d": "2026-09-30", "c": "DoorDash", "t": "Senior Payroll Analyst", "loc": "Remote US", "sal": "$95.2K-$140K", "st": "Submitted", "link": "https://job-boards.greenhouse.io/doordashusa/jobs/8023474"}, {"d": "2026-09-30", "c": "KoBold Metals", "t": "Senior Corporate Accountant", "loc": "Remote US/Canada", "sal": "$90K-$115K", "st": "Submitted", "link": "https://job-boards.greenhouse.io/koboldmetals/jobs/4643087005"}, {"d": "2026-09-29", "c": "Ivy Hospitality", "t": "Senior Accountant", "loc": "Remote US", "sal": "$90K-$100K", "st": "Submitted", "link": "https://careers.hireology.com/ivyhospitality-corporateoffice/2843681/description"}, {"d": "2026-09-29", "c": "BaubleBar", "t": "Senior Accountant, Revenue and General Ledger", "loc": "Remote US", "sal": "$105K-$115K", "st": "Submitted", "link": "https://job-boards.greenhouse.io/baublebar/jobs/8231411"}, {"d": "2026-09-28", "c": "Branch", "t": "Senior Accountant", "loc": "Remote US", "sal": "$120K-$130K", "st": "Submitted", "link": "https://job-boards.greenhouse.io/branch/jobs/7978805003"}, {"d": "2026-09-28", "c": "Figma", "t": "Senior Accountant", "loc": "US Remote", "sal": "$115K-$167K", "st": "Submitted", "link": "https://job-boards.greenhouse.io/figma/jobs/6119198004?gh_jid=6119198004"}, {"d": "2026-09-28", "c": "WelbeHealth", "t": "Senior Accountant, Reporting", "loc": "Remote US", "sal": "$90K-$119K", "st": "Submitted", "link": "https://builtin.com/job/senior-accountant-reporting/10787533"}, {"d": "2026-09-28", "c": "BaubleBar", "t": "Senior Accountant, Inventory and NetSuite", "loc": "Remote US", "sal": "$95K-$105K", "st": "Submitted", "link": "https://job-boards.greenhouse.io/baublebar/jobs/8174556?gh_jid=8174556"}, {"d": "2026-09-28", "c": "Oklo", "t": "Senior Accountant", "loc": "Santa Clara, CA or Remote", "sal": "$100K-$120K", "st": "Submitted", "link": "https://builtin.com/job/senior-accountant/11254762"}, {"d": "2026-09-28", "c": "Babylist", "t": "Finance Manager, E-Commerce", "loc": "Not recorded", "sal": "Not recorded", "st": "Submitted", "link": "https://builtin.com/job/finance-manager-e-commerce/10835104"}, {"d": "2026-09-28", "c": "Wasabi Technologies", "t": "Senior International Accountant", "loc": "Not recorded", "sal": "Not recorded", "st": "Submitted", "link": "https://job-boards.greenhouse.io/wasabi/jobs/5226941008"}, {"d": "2026-09-28", "c": "Attivo Partners", "t": "Senior Accountant, Web3 Practice", "loc": "Remote US (NYC/Austin/Boston preferred)", "sal": "~$100K", "st": "Rejected", "link": "https://job-boards.greenhouse.io/attivopartners/jobs/4557664006?gh_src=003b32256us"}, {"d": "2026-09-27", "c": "BOLD", "t": "Senior Financial Analyst, Payments", "loc": "Not recorded", "sal": "Not recorded", "st": "Submitted", "link": ""}, {"d": "2026-09-27", "c": "Vision To Learn", "t": "Senior Financial Analyst", "loc": "Los Angeles, CA / Remote US", "sal": "$95K-$110K", "st": "Submitted", "link": "https://www.theladders.com/job/senior-financial-analyst-vision-to-learn-los-angeles-ca_88578901"}, {"d": "2026-09-27", "c": "Robert Half", "t": "Senior Accountant", "loc": "Pleasanton, CA", "sal": "$100K-$120K", "st": "Submitted", "link": ""}, {"d": "2026-09-27", "c": "Robert Half", "t": "Sr. Financial Analyst", "loc": "Bay Area, CA", "sal": "Not recorded", "st": "Submitted", "link": ""}, {"d": "2026-09-27", "c": "Robert Half", "t": "Cost Accountant", "loc": "Union City, CA", "sal": "$90K-$115K", "st": "Submitted", "link": "https://www.roberthalf.com/us/en/job/union-city-california/cost-accountant/00340-0013480371-usen"}];
+
+function fmtDate(iso){
+  var parts = iso.split("-");
+  var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return months[parseInt(parts[1],10)-1] + " " + parseInt(parts[2],10);
+}
+function esc(s){
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+var rowsEl = document.getElementById("rows");
+var countEl = document.getElementById("countLine");
+var emptyEl = document.getElementById("empty");
+var currentFilter = "all";
+
+function matches(app){
+  if(currentFilter === "inplay" && app.st !== "Submitted") return false;
+  if(currentFilter === "rejected" && app.st !== "Rejected") return false;
+  if(currentFilter === "nov" && app.d.slice(5,7) !== "11") return false;
+  if(currentFilter === "oct" && app.d.slice(5,7) !== "10") return false;
+  var q = document.getElementById("q").value.trim().toLowerCase();
+  if(q && (app.c + " " + app.t).toLowerCase().indexOf(q) === -1) return false;
+  return true;
+}
+
+function render(){
+  var html = "";
+  var n = 0;
+  for(var i=0;i<APPS.length;i++){
+    var a = APPS[i];
+    if(!matches(a)) continue;
+    n++;
+    var inplay = a.st === "Submitted";
+    html += '<div class="row">'
+      + '<span class="date">' + fmtDate(a.d) + '</span>'
+      + '<span class="who"><span class="co">' + esc(a.c) + '</span>'
+      + '<span class="ti">' + esc(a.t) + '</span></span>'
+      + '<span class="sal">' + esc(a.sal) + '</span>'
+      + '<span class="st"><span class="pill ' + (inplay ? "inplay" : "rej") + '">' + (inplay ? "In play" : "Rejected") + '</span>'
+      + (a.link ? '<a class="ext" href="' + esc(a.link) + '" target="_blank" rel="noopener" aria-label="Open posting for ' + esc(a.c) + '">↗</a>' : '')
+      + '</span></div>';
+  }
+  rowsEl.innerHTML = html;
+  emptyEl.style.display = n === 0 ? "block" : "none";
+  countEl.textContent = "Showing " + n + " of 92 applications";
+}
+
+var btns = document.querySelectorAll(".chip-btn");
+for(var b=0;b<btns.length;b++){
+  btns[b].addEventListener("click", function(){
+    for(var j=0;j<btns.length;j++) btns[j].setAttribute("aria-pressed","false");
+    this.setAttribute("aria-pressed","true");
+    currentFilter = this.getAttribute("data-filter");
+    render();
+  });
+}
+document.getElementById("q").addEventListener("input", render);
+render();
+
+/* Rejections list */
+var rejHtml = "";
+for(var r=0;r<APPS.length;r++){
+  var x = APPS[r];
+  if(x.st !== "Rejected") continue;
+  rejHtml += '<li><span class="rc"><b>' + esc(x.c) + '</b><span>' + esc(x.t) + '</span></span>'
+    + '<span class="rd">Applied ' + fmtDate(x.d) + '</span></li>';
+}
+document.getElementById("rejList").innerHTML = rejHtml;
+</script>
+</body>
+</html>

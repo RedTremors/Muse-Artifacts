@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="light dark"/>
+<link rel="icon" href="data:,">
+<title>Weekly Money Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F3ED;
+    --surface:#FFFFFF;
+    --surface2:#EEE9DE;
+    --ink:#14231C;
+    --ink-2:#4A5A52;
+    --ink-3:#7A8A82;
+    --line:#DDD6C7;
+    --green:#1B4D36;
+    --green-light:#E6EFEA;
+    --amber:#B7791F;
+    --amber-bg:#FEF3D8;
+    --red:#9E2B25;
+    --red-bg:#FDF0EE;
+    --radius:16px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0F1713;
+      --surface:#1A2620;
+      --surface2:#22302A;
+      --ink:#EAF0EC;
+      --ink-2:#A8B8AE;
+      --ink-3:#7D8F86;
+      --line:#2E3E36;
+      --green:#7EC8A0;
+      --green-light:#1E3329;
+      --amber:#E8B85A;
+      --amber-bg:#2E2716;
+      --red:#F0908A;
+      --red-bg:#2E1E1D;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  button,[role="button"]{min-height:36px}
+  a{color:var(--green);text-decoration-thickness:1px;text-underline-offset:3px}
+  .wrap{max-width:1080px;margin:0 auto;padding:20px 18px 40px}
+  /* header */
+  .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:8px 0 18px;border-bottom:2px solid var(--ink)}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);display:flex;gap:8px;align-items:center}
+  .eyebrow i{width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block}
+  h1{font-family:"DM Serif Display",serif;font-weight:400;font-size:clamp(36px,6vw,56px);line-height:.95;letter-spacing:-.02em;margin:10px 0 6px}
+  h1 em{font-style:italic;color:var(--green)}
+  .sub{font-size:15px;color:var(--ink-2);max-width:560px}
+  .datebox{text-align:right;flex-shrink:0}
+  .datebox .dow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+  .datebox .date{font-family:"DM Serif Display",serif;font-size:28px;line-height:1;margin-top:4px}
+  .datebox .time{font-size:12px;color:var(--ink-3);margin-top:2px}
+
+  /* alert strip */
+  .alert{margin-top:16px;background:var(--amber-bg);border:1px solid #E8D9A8;border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+  @media (prefers-color-scheme: dark){.alert{border-color:#4A3E1E}}
+  .alert-icon{width:32px;height:32px;border-radius:50%;background:var(--amber);color:#fff;display:grid;place-items:center;font-weight:700;flex-shrink:0;font-size:14px}
+  .alert strong{font-size:14px}
+  .alert p{margin:2px 0 0;font-size:13.5px;color:var(--ink-2);line-height:1.5}
+  .alert p b{color:var(--ink)}
+
+  /* KPI row */
+  .kpis{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:12px;margin-top:16px}
+  @media(max-width:700px){.kpis{grid-template-columns:1fr 1fr}.kpis .kpi:first-child{grid-column:span 2}}
+  .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+  .kpi label{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between}
+  .kpi .val{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:32px;line-height:1;margin:10px 0 4px;letter-spacing:-.03em}
+  .kpi .val small{font-size:16px;color:var(--ink-2)}
+  .kpi .note{font-size:13px;color:var(--ink-2);line-height:1.45}
+  .kpi.highlight{background:var(--green);color:#fff;border-color:var(--green)}
+  @media (prefers-color-scheme: dark){.kpi.highlight{background:#234E38;border-color:#2A5A40}}
+  .kpi.highlight label,.kpi.highlight .note,.kpi.highlight .val small{color:#C8DDD1}
+  .kpi.highlight .val{color:#fff}
+  .bar{height:8px;background:var(--surface2);border-radius:99px;overflow:hidden;margin:12px 0 8px}
+  .bar i{display:block;height:100%;background:#fff;border-radius:99px}
+  .bar.dark i{background:var(--green)}
+  .bar-meta{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3)}
+  .kpi.highlight .bar{background:rgba(255,255,255,.22)}
+  .kpi.highlight .bar-meta{color:#C8DDD1}
+
+  /* layout grid */
+  .grid{display:grid;grid-template-columns:1.55fr .95fr;gap:16px;margin-top:16px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+  .card h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-family:"IBM Plex Mono",monospace;font-weight:600;margin:0 0 4px;display:flex;justify-content:space-between;align-items:center}
+  .card h2 span{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-3);font-family:Inter,sans-serif;font-size:13px}
+  .card h3{font-family:"DM Serif Display",serif;font-weight:400;font-size:22px;margin:6px 0 12px;line-height:1.1}
+
+  /* timeline */
+  .timeline{list-style:none;margin:0;padding:0}
+  .timeline li{display:grid;grid-template-columns:52px 14px 1fr;gap:0 10px;position:relative;padding-bottom:18px}
+  .timeline li:last-child{padding-bottom:2px}
+  .timeline li::before{content:"";position:absolute;left:58px;top:22px;bottom:0;width:1px;background:var(--line)}
+  .timeline li:last-child::before{display:none}
+  .t-date{font-family:"IBM Plex Mono",monospace;font-size:12px;line-height:1.2;text-align:right;padding-top:2px}
+  .t-date b{display:block;font-size:13px}
+  .t-date span{color:var(--ink-3);font-size:11px}
+  .dot{width:11px;height:11px;border-radius:50%;border:2px solid var(--surface);margin-top:4px;z-index:1;justify-self:center}
+  .dot.today{background:var(--amber);box-shadow:0 0 0 3px var(--amber-bg)}
+  .dot.in{background:var(--green)}
+  .dot.out{background:var(--red)}
+  .dot.neutral{background:var(--ink-3)}
+  .t-body strong{font-size:14.5px;display:block}
+  .t-body p{margin:2px 0 0;font-size:13.5px;color:var(--ink-2);line-height:1.5}
+  .t-amt{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;padding:2px 7px;border-radius:99px;display:inline-block;margin-top:6px}
+  .t-amt.in{background:var(--green-light);color:var(--green)}
+  .t-amt.out{background:var(--red-bg);color:var(--red)}
+  .badge{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 7px;border-radius:99px;background:var(--ink);color:var(--bg);vertical-align:2px;margin-left:6px}
+
+  /* split viz */
+  .split-bar{display:flex;height:52px;border-radius:10px;overflow:hidden;margin:14px 0 10px;border:1px solid var(--line)}
+  .split-bar div{display:flex;flex-direction:column;justify-content:center;padding:0 12px;color:#fff;min-width:0}
+  .split-bar div b{font-family:"IBM Plex Mono",monospace;font-size:13px;line-height:1}
+  .split-bar div span{font-size:11px;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .s-invest{flex:59;background:#1B4D36}
+  .s-fun{flex:17;background:#2E7D5B}
+  .s-travel{flex:17;background:#7FB069}
+  .s-exp{flex:7;background:#B7791F}
+  @media(max-width:560px){.split-bar{height:64px}.split-bar div span{display:none}.s-exp b{font-size:11px}}
+  .split-list{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:520px){.split-list{grid-template-columns:1fr}}
+  .split-list li{border:1px solid var(--line);border-radius:10px;padding:12px}
+  .split-list li header{display:flex;justify-content:space-between;align-items:baseline}
+  .split-list li header b{font-size:13px}
+  .split-list li header span{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px}
+  .split-list li p{margin:4px 0 0;font-size:12.5px;color:var(--ink-2);line-height:1.45}
+  .total-row{display:flex;justify-content:space-between;border-top:1px dashed var(--line);margin-top:14px;padding-top:12px;font-size:13px;color:var(--ink-2)}
+  .total-row b{font-family:"IBM Plex Mono",monospace;color:var(--ink)}
+
+  /* sim */
+  .sim{background:var(--surface2);border-radius:10px;padding:14px;margin-top:16px}
+  .sim h4{margin:0;font-size:13px}
+  .sim p{margin:4px 0 10px;font-size:13px;color:var(--ink-2)}
+  .sim-btns{display:flex;gap:8px;flex-wrap:wrap}
+  .sim-btns button{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 12px;border-radius:99px;font-size:13px;font-weight:600;cursor:pointer;min-height:36px}
+  .sim-btns button.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .sim-result{margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:13px;line-height:1.6;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:none}
+  .sim-result.show{display:block}
+
+  /* right column lists */
+  .rule-list{list-style:none;margin:0;padding:0}
+  .rule-list li{padding:11px 0;border-bottom:1px solid var(--line);display:flex;gap:12px}
+  .rule-list li:last-child{border-bottom:0;padding-bottom:0}
+  .rule-list li:first-child{padding-top:2px}
+  .num{width:26px;height:26px;border-radius:50%;background:var(--green-light);color:var(--green);display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;flex-shrink:0;margin-top:1px}
+  .rule-list b{font-size:14px;display:block}
+  .rule-list p{margin:2px 0 0;font-size:13px;color:var(--ink-2);line-height:1.5}
+
+  .mini-table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+  .mini-table th{text-align:left;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:500;padding:6px 0;border-bottom:1px solid var(--line)}
+  .mini-table th:last-child,.mini-table td:last-child{text-align:right}
+  .mini-table td{padding:8px 0;border-bottom:1px solid var(--line);vertical-align:top}
+  .mini-table tr:last-child td{border-bottom:0}
+  .mini-table td.mono{font-family:"IBM Plex Mono",monospace;font-weight:600;white-space:nowrap}
+  .tag{font-size:11px;font-weight:600;padding:2px 6px;border-radius:99px;background:var(--surface2);color:var(--ink-2)}
+
+  .footer{margin-top:18px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-3);border-top:1px solid var(--line);padding-top:14px}
+  .footer strong{color:var(--ink-2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <div>
+      <div class="eyebrow"><i></i> Weekly Money Board &bull; Dublin, CA</div>
+      <h1>This week,<br><em>in motion.</em></h1>
+      <p class="sub">The paycheck split, the Invest buffer, and the Fidelity pull — just this week, Nov 8–14. Deep history lives in the Finance Dashboard; this is the snapshot you check on a Tuesday morning.</p>
+    </div>
+    <div class="datebox">
+      <div class="dow">Tuesday</div>
+      <div class="date">Nov 10, 2026</div>
+      <div class="time">As of 7:04 AM PT &bull; Snapshot</div>
+    </div>
+  </header>
+
+  <div class="alert" role="note">
+    <div class="alert-icon">!</div>
+    <div>
+      <strong>Wed → Thu squeeze — no action needed, but worth seeing</strong>
+      <p>Invest sits at <b>$376.89</b> today. The <b>$775.79</b> split lands <b>Wed Nov 11</b> and a Fidelity pull hits <b>Thu Nov 12</b>. In the worst intraday ordering it can dip briefly, then recover when the split posts — same pattern as Oct 15, which needed no top-up. A check runs Wed 9:14 AM and stays silent unless a top-up is actually needed.</p>
+    </div>
+  </div>
+
+  <section class="kpis" aria-label="Key numbers">
+    <article class="kpi highlight">
+      <label>Invest buffer <span>Target $1,000+</span></label>
+      <div class="val">$376.89</div>
+      <div class="bar"><i style="width:37.7%"></i></div>
+      <div class="bar-meta"><span>$376.89 now</span><span>$623.11 to target</span></div>
+      <p class="note" style="margin-top:10px">After Wed's +$775.79 split: $1,152.68 — briefly above the $1,000 target, in the window before Thu's pull. After Thu's $489.08 pull it settles at $663.60, still below target. The buffer rebuilds on the next paycheck.</p>
+    </article>
+    <article class="kpi">
+      <label>Next paycheck split <span>Wed</span></label>
+      <div class="val">$1,314<small>.89</small></div>
+      <p class="note"><strong style="color:var(--ink)">Wed, Nov 11</strong> — biweekly payday. Split is set in stone: 59 / 17 / 17 / 7. See breakdown below.</p>
+      <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap"><span class="tag">Invest $775.79</span><span class="tag">Fun $223.53</span></div>
+    </article>
+    <article class="kpi">
+      <label>Fun funding <span>Per paycheck</span></label>
+      <div class="val">$223<small>.53</small></div>
+      <p class="note">Accrues from <strong style="color:var(--ink)">Sep 16, 2026</strong>. Actual fun spend runs ~$626/mo, so this bucket underfunds by design and gets manual top-ups from Invest / Travel.</p>
+    </article>
+  </section>
+
+  <div class="grid">
+    <div style="display:flex;flex-direction:column;gap:16px">
+
+      <!-- Timeline -->
+      <section class="card">
+        <h2>Week of Nov 8–14 <span>All times PT</span></h2>
+        <h3>What lands, what leaves</h3>
+        <ul class="timeline">
+          <li>
+            <div class="t-date"><b>TUE</b><span>Nov 10</span></div><div class="dot today"></div>
+            <div class="t-body"><strong>Today — you are here</strong><p>Invest at $376.89. No moves due. Friday fun report and expense logic are already defined — nothing to reconcile by hand today.</p><span class="t-amt in">Buffer $376.89</span></div>
+          </li>
+          <li>
+            <div class="t-date"><b>WED</b><span>Nov 11</span></div><div class="dot in"></div>
+            <div class="t-body"><strong>Paycheck split posts <span class="badge">Payday</span></strong><p>Biweekly payday in the Sep 30 → Oct 14 → Oct 28 → Nov 11 cadence. The full split distributes automatically.</p><span class="t-amt in">+$775.79 to Invest</span> <span class="t-amt in">+$223.53 Fun</span> <span class="t-amt in">+$223.53 Travel</span></div>
+          </li>
+          <li>
+            <div class="t-date"><b>THU</b><span>Nov 12</span></div><div class="dot out"></div>
+            <div class="t-body"><strong>Fidelity auto-transfer</strong><p>This week's pull is $489.08 (the alternating cycle is $273.81 / $489.08). It is the one to watch against Wed's split timing — if it posts before the split clears, the intraday dip appears, then resolves.</p><span class="t-amt out">− $489.08</span></div>
+          </li>
+          <li>
+            <div class="t-date"><b>FRI</b><span>Nov 13</span></div><div class="dot neutral"></div>
+            <div class="t-body"><strong>Friday fun report — 9:00 AM</strong><p>Running balance = $223.53 × paychecks since Sep 16 minus fun spend since Sep 16. Fun = food, activities / entertainment, Venmo out, shopping, personal care (net of refunds). Gas / vehicle is Expenses, not Fun. Travel excluded. Points earned added to the ledger.</p></div>
+          </li>
+        </ul>
+
+        <div class="sim">
+          <h4>Try the Wed / Thu ordering</h4>
+          <p>Same money, different posting order. This is why the Wed check exists.</p>
+          <div class="sim-btns">
+            <button id="btnNormal" class="active" type="button">Split posts first</button>
+            <button id="btnWorst" type="button">Pull posts first</button>
+          </div>
+          <div id="simResult" class="sim-result show"></div>
+        </div>
+      </section>
+
+      <!-- Split -->
+      <section class="card">
+        <h2>The split — set in stone <span>Do not redesign</span></h2>
+        <h3>Every paycheck, same four buckets</h3>
+        <div class="split-bar" aria-label="Paycheck split visualization">
+          <div class="s-invest"><b>59%</b><span>Invest</span></div>
+          <div class="s-fun"><b>17%</b><span>Fun CC</span></div>
+          <div class="s-travel"><b>17%</b><span>Travel</span></div>
+          <div class="s-exp"><b>7%</b><span>Exp.</span></div>
+        </div>
+        <ul class="split-list">
+          <li><header><b>Invest</b><span>$775.79</span></header><p>59% — buffer for Fidelity pulls. Target buffer is $1,000+. This is the bucket that absorbs timing gaps.</p></li>
+          <li><header><b>Fun CC</b><span>$223.53</span></header><p>17% — food, entertainment, shopping, personal care. Runs light vs. ~$626/mo actual, hence top-ups.</p></li>
+          <li><header><b>Travel</b><span>$223.53</span></header><p>17% — held separate from Fun in the Friday report. Not counted as fun spend.</p></li>
+          <li><header><b>Expenses</b><span>$92.04</span></header><p>7% — bills, DMV / fees, medical, home, gas / vehicle, transit. Monthly funding ≈ $184–$199/mo on this cadence.</p></li>
+        </ul>
+        <div class="total-row"><span>Implied gross split total per paycheck</span><b>$1,314.89</b></div>
+      </section>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <!-- Fidelity calendar -->
+      <section class="card">
+        <h2>Fidelity pulls</h2>
+        <h3>Alternating weeks</h3>
+        <table class="mini-table">
+          <thead><tr><th>Cycle</th><th>Amount</th></tr></thead>
+          <tbody>
+            <tr><td>Week A</td><td class="mono">$273.81</td></tr>
+            <tr><td>Week B</td><td class="mono">$489.08</td></tr>
+            <tr><td>Next pull</td><td class="mono">Thu Nov 12</td></tr>
+            <tr><td>Payday cadence</td><td class="mono">Every 14 days</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:13px;color:var(--ink-2);line-height:1.55;margin:12px 0 0">Last paydays: Sep 30, Oct 14, Oct 28. Next: <strong style="color:var(--ink)">Nov 11, Nov 25</strong>. When a large pull and a payday land in the same 48 hours, the buffer does the work — that's its job.</p>
+      </section>
+
+      <!-- How reports work -->
+      <section class="card">
+        <h2>How the reports count it</h2>
+        <h3>So the numbers mean the same thing every week</h3>
+        <ul class="rule-list">
+          <li><div class="num">1</div><div><b>Friday fun report</b><p>Budget accrued ($223.53 / paycheck from Sep 16) minus fun spend since Sep 16. Points earned are added to the points ledger in the same run.</p></div></li>
+          <li><div class="num">2</div><div><b>What counts as Fun</b><p>Food, activities &amp; entertainment, Venmo outflows, shopping, personal care — net of refunds.</p></div></li>
+          <li><div class="num">3</div><div><b>What does not</b><p>Gas / vehicle = Expenses. Travel is excluded entirely from the fun balance.</p></div></li>
+          <li><div class="num">4</div><div><b>Monthly expenses report — 1st of month, 9:00 AM</b><p>Prior month's bills / DMV / fees / medical / home / gas / vehicle / transit vs. ~$199/mo Expenses funding.</p></div></li>
+        </ul>
+      </section>
+
+      <!-- At a glance -->
+      <section class="card" style="background:var(--ink);color:var(--bg);border-color:var(--ink)">
+        <h2 style="color:#9AB0A4">At a glance</h2>
+        <div style="margin-top:12px;display:grid;gap:12px">
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.15);padding-bottom:10px"><span style="font-size:13px;opacity:.8">Invest now</span><b style="font-family:'IBM Plex Mono',monospace">$376.89</b></div>
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.15);padding-bottom:10px"><span style="font-size:13px;opacity:.8">After Wed split</span><b style="font-family:'IBM Plex Mono',monospace">$1,152.68</b></div>
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.15);padding-bottom:10px"><span style="font-size:13px;opacity:.8">If Thu pull is $273.81</span><b style="font-family:'IBM Plex Mono',monospace">$878.87</b></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:13px;opacity:.8">If Thu pull is $489.08</span><b style="font-family:'IBM Plex Mono',monospace">$663.60</b></div>
+        </div>
+        <p style="font-size:12.5px;opacity:.75;line-height:1.55;margin:14px 0 0">Both Thu outcomes are after the split has posted. The only dip is intraday, if the pull beats the split on Wed night / Thu morning.</p>
+      </section>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span><strong>Justin Chu</strong> — Weekly snapshot for Nov 8–14, 2026. Paycheck split confirmed Oct 1, 2026 and held fixed.</span>
+    <span>Invest buffer $376.89 and Wed/Thu timing from week-ahead briefing Nov 8.</span>
+  </footer>
+</div>
+
+<script>
+  var start = 376.89, split = 775.79;
+  var pulls = [273.81, 489.08];
+  var res = document.getElementById('simResult');
+  var bN = document.getElementById('btnNormal'), bW = document.getElementById('btnWorst');
+  function fmt(n){ return (n<0?'-$':'$') + Math.abs(n).toFixed(2); }
+  function showNormal(){
+    bN.classList.add('active'); bW.classList.remove('active');
+    res.innerHTML = 'Start Tue: ' + fmt(start) + '<br>Wed + split: ' + fmt(start+split) + '  → above $1,000 target ✓<br>Thu − $273.81 pull: ' + fmt(start+split-273.81) + ' &nbsp;|&nbsp; Thu − $489.08 pull: ' + fmt(start+split-489.08);
+    res.classList.add('show');
+  }
+  function showWorst(){
+    bW.classList.add('active'); bN.classList.remove('active');
+    res.innerHTML = 'Start Tue: ' + fmt(start) + '<br>Thu pull first − $489.08: ' + fmt(start-489.08) + '  → brief dip below $0 intraday<br>Then + split $775.79: ' + fmt(start-489.08+775.79) + '  → recovered same day';
+    res.classList.add('show');
+  }
+  bN.addEventListener('click', showNormal);
+  bW.addEventListener('click', showWorst);
+  showNormal();
+</script>
+</body>
+</html>

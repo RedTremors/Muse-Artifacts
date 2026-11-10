@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Road to Riding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2rem; }
+      :root{
+        --bg:#f4f2ec; --surface:#fffdf8; --surface2:#eceae2; --ink:#1c1e1c; --muted:#5c6058;
+        --line:#d8d4c6; --accent:#b3540a; --accent-soft:#f3e2d2; --good:#2e6b34; --good-soft:#e0ecdc;
+        --amber:#8a6d1a; --amber-soft:#f0e8c8; --shadow:0 1px 2px rgba(28,30,28,.06),0 8px 24px rgba(28,30,28,.05);
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --bg:#14161a; --surface:#1d2026; --surface2:#262a31; --ink:#ece9e0; --muted:#a3a69e;
+          --line:#383d45; --accent:#e07f2e; --accent-soft:#3a2a1a; --good:#7fc484; --good-soft:#22331f;
+          --amber:#d8bc55; --amber-soft:#37311a; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
+        }
+      }
+      *{box-sizing:border-box}
+      body{margin:0;background:var(--bg);color:var(--ink);font-family:"Barlow",system-ui,sans-serif;font-size:16px;line-height:1.5}
+      .wrap{max-width:1060px;margin:0 auto;padding:28px 20px 56px}
+      h1,h2,h3{font-family:"Barlow Condensed","Barlow",sans-serif;line-height:1.05;margin:0}
+      /* Header */
+      .kicker{font-family:"Barlow Semi Condensed",sans-serif;font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem;color:var(--accent)}
+      .hero h1{font-size:clamp(2.4rem,6vw,3.6rem);font-weight:700;text-transform:uppercase;letter-spacing:.01em;margin:.15em 0 .25em}
+      .hero p.lede{font-size:1.13rem;max-width:62ch;margin:0;color:var(--ink)}
+      .hero p.lede strong{color:var(--accent)}
+      .meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+      .chip{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:.88rem;font-weight:500}
+      .chip b{font-weight:700}
+      /* Next action banner */
+      .next{margin-top:26px;background:var(--ink);color:var(--bg);border-radius:14px;padding:20px 22px;display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+      .next .tag{font-family:"Barlow Semi Condensed",sans-serif;font-weight:600;letter-spacing:.12em;text-transform:uppercase;font-size:.75rem;background:var(--accent);color:#fff;padding:4px 10px;border-radius:6px;white-space:nowrap;margin-top:3px}
+      .next h2{font-size:1.5rem;font-weight:600;text-transform:uppercase}
+      .next p{margin:4px 0 0;max-width:64ch;opacity:.92}
+      /* Sections */
+      section{margin-top:38px}
+      .sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:18px;flex-wrap:wrap}
+      .sec-head h2{font-size:1.85rem;font-weight:700;text-transform:uppercase}
+      .sec-head span{color:var(--muted);font-size:.95rem}
+      /* Timeline */
+      .steps{list-style:none;margin:0;padding:0;display:grid;gap:0}
+      .step{display:grid;grid-template-columns:34px 1fr;gap:14px;position:relative;padding-bottom:22px}
+      .step::before{content:"";position:absolute;left:16px;top:34px;bottom:2px;width:2px;background:var(--line)}
+      .step:last-child::before{display:none}
+      .dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.95rem;border:2px solid var(--line);background:var(--surface);color:var(--muted);z-index:1}
+      .step.done .dot{background:var(--good);border-color:var(--good);color:#fff}
+      .step.now .dot{background:var(--accent);border-color:var(--accent);color:#fff}
+      .step h3{font-size:1.3rem;font-weight:600}
+      .step .when{font-family:"Barlow Semi Condensed",sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+      .step p{margin:3px 0 0;max-width:66ch}
+      .pill{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:2px}
+      .pill.done{background:var(--good-soft);color:var(--good)}
+      .pill.now{background:var(--accent-soft);color:var(--accent)}
+      .pill.next{background:var(--surface2);color:var(--muted)}
+      /* Cards grid */
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+      @media (max-width:760px){.grid{grid-template-columns:1fr}}
+      .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
+      .card h3{font-size:1.35rem;font-weight:600;text-transform:uppercase;margin-bottom:4px}
+      .card .sub{color:var(--muted);font-size:.92rem;margin:0 0 14px}
+      ul.clean{list-style:none;margin:0;padding:0}
+      ul.clean li{padding:10px 0;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:space-between;align-items:flex-start}
+      ul.clean li:first-child{border-top:none;padding-top:2px}
+      .item-name{font-weight:600}
+      .item-detail{color:var(--muted);font-size:.9rem;display:block;font-weight:400}
+      .price{font-family:"Barlow Semi Condensed",sans-serif;font-weight:600;white-space:nowrap;text-align:right}
+      .price small{display:block;color:var(--muted);font-weight:500}
+      .status{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;white-space:nowrap}
+      .status.owned{background:var(--good-soft);color:var(--good)}
+      .status.open{background:var(--amber-soft);color:var(--amber)}
+      .status.decide{background:var(--accent-soft);color:var(--accent)}
+      .total{margin-top:14px;background:var(--surface2);border-radius:10px;padding:12px 14px;font-size:.95rem}
+      .total b{font-size:1.05rem}
+      /* Rules list */
+      .rules{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+      .rules li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+      .rules b{display:block;font-family:"Barlow Semi Condensed",sans-serif;font-size:1.02rem}
+      .rules span{color:var(--muted);font-size:.93rem}
+      .sweep{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:10px;padding:16px 18px}
+      .sweep h3{font-size:1.25rem;font-weight:600;text-transform:uppercase}
+      .sweep p{margin:5px 0 0}
+      .sweep .when{color:var(--muted);font-size:.88rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-family:"Barlow Semi Condensed",sans-serif}
+      footer{margin-top:44px;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:.9rem}
+      a{color:var(--accent)}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="hero">
+        <div class="kicker">Motorcycle · Dublin, CA</div>
+        <h1>Road to Riding</h1>
+        <p class="lede">CMSP course <strong>passed Sunday, Nov 8, 2026</strong>. What remains between here and riding legally is short: a certificate in the mail, one DMV visit, a helmet order, riding pants, and the right DCT bike at the right price.</p>
+        <div class="meta-row">
+          <span class="chip">Course: <b>Pacific Motorcycle Training, Livermore</b></span>
+          <span class="chip">Format: <b>EMTC, $425</b></span>
+          <span class="chip">Result: <b>Passed Nov 8</b></span>
+          <span class="chip">Snapshot: <b>Tue, Nov 10, 2026</b></span>
+        </div>
+      </header>
+
+      <div class="next">
+        <span class="tag">Next move</span>
+        <div>
+          <h2>Watch the mail for the DL 389</h2>
+          <p>Pacific Motorcycle Training mails the DL 389 certificate, expected within about 10 business days of the Nov 8 pass, so by roughly <b>Friday, Nov 20</b>. Nothing else on the license path can move until it lands. The DMV trip after it is a paperwork visit only: the certificate waives the DMV skills test.</p>
+        </div>
+      </div>
+
+      <section aria-labelledby="license-h">
+        <div class="sec-head"><h2 id="license-h">The license path</h2><span>Four steps, two done</span></div>
+        <ol class="steps">
+          <li class="step done">
+            <div class="dot">✓</div>
+            <div>
+              <span class="when">Weekend of Nov 7–8, 2026</span>
+              <h3>Take the CMSP course<span class="pill done">Done</span></h3>
+              <p>EMTC format at Las Positas College in Livermore: a 6-hour online eRider portion plus about 10 hours on the range over one weekend. Dirt-bike experience carried over on bike control; street strategy was the new material.</p>
+            </div>
+          </li>
+          <li class="step done">
+            <div class="dot">✓</div>
+            <div>
+              <span class="when">Sunday, Nov 8, 2026</span>
+              <h3>Pass the course<span class="pill done">Done</span></h3>
+              <p>Passed on day 2, including after a rough stomach morning. The pass earns the DL 389 certificate, which is the document that waives the DMV motorcycle skills test.</p>
+            </div>
+          </li>
+          <li class="step now">
+            <div class="dot">3</div>
+            <div>
+              <span class="when">Expected by about Fri, Nov 20, 2026</span>
+              <h3>DL 389 arrives by mail<span class="pill now">In the mail</span></h3>
+              <p>Mailed by Pacific Motorcycle Training, expected within about 10 business days. If it has not arrived by Nov 20, PMT's office line is (925) 373-4802, open weekdays 9:00 AM to 5:00 PM.</p>
+            </div>
+          </li>
+          <li class="step">
+            <div class="dot">4</div>
+            <div>
+              <span class="when">After the certificate lands</span>
+              <h3>DMV visit: add the M1 endorsement<span class="pill next">Up next</span></h3>
+              <p>Bring the DL 389 to the DMV. The skills test is waived by the certificate, so this is a paperwork and photo visit that turns the course pass into the actual M1 endorsement on the license.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section aria-labelledby="gear-h">
+        <div class="sec-head"><h2 id="gear-h">Gear status</h2><span>Bought in Taiwan Oct 28–30, except the two open items</span></div>
+        <div class="grid">
+          <div class="card">
+            <h3>Already in the closet</h3>
+            <p class="sub">Purchased Oct 2026. The jacket, boots, and gloves list at NT$9,750 combined; the confirmed amount actually paid for the Taiwan gear (everything except pants) was NT$9,379, about $298, reflecting in-store pricing. The Cardo was bought separately.</p>
+            <ul class="clean">
+              <li>
+                <div><span class="item-name">KOMINE JK-185 ENIGMA G2 parka</span>
+                <span class="item-detail">4-season jacket, CE Level 2 armor. Bought at 柏霖動機 Neihu, Taipei.</span></div>
+                <div class="price">NT$5,000<small>~$156</small></div>
+              </li>
+              <li>
+                <div><span class="item-name">KOMINE BK-096 boots</span>
+                <span class="item-detail">Size JP 26.0, water-resistant.</span></div>
+                <div class="price">NT$2,990<small>~$93</small></div>
+              </li>
+              <li>
+                <div><span class="item-name">KOMINE GK-818 gloves</span>
+                <span class="item-detail">Winter waterproof (HIPORA), knuckle protector and palm slider, touchscreen capable.</span></div>
+                <div class="price">NT$1,760<small>~$55</small></div>
+              </li>
+              <li>
+                <div><span class="item-name">Cardo Freecom 2x</span>
+                <span class="item-detail">Bluetooth comms, 40mm JBL speakers, Bluetooth 5.2, 13-hour talk time. Bought Oct 30 at Louis Motorrad, Taipei.</span></div>
+                <div class="price">NT$6,280</div>
+              </li>
+            </ul>
+            <div class="total">Kit status: <b>jacket, boots, gloves, and comms owned.</b> Two items below are all that is left before the kit is complete.</div>
+          </div>
+
+          <div>
+            <div class="card" style="margin-bottom:18px">
+              <h3>Helmet: decision made, order is yours</h3>
+              <p class="sub">Final pick after a fit-based redo. Shape is the filter: HJC runs wider and rounder in intermediate-oval, the better match.</p>
+              <ul class="clean">
+                <li>
+                  <div><span class="item-name">HJC C10</span>
+                  <span class="item-detail">DOT and ECE 22.06, SHARP-tested, 4 shell sizes (MD/LG share a shell, liner differs). Black/White $119.99, Matte Black $129.99. In stock online in MD and LG, ships in 24 hours; not sold at the Pleasanton store. Cycle Gear allows 90-day returns and free in-store returns at Pleasanton, so a fit miss is low-risk.</span></div>
+                  <span class="status decide">Order call open</span>
+                </li>
+                <li>
+                  <div><span class="item-name">If the C10 pinches</span>
+                  <span class="item-detail">AGV K1 S (about $220–250, ECE 22.06, SHARP 5-star, mild side-pressure caveat), then the AGV K3 ($319, best pure shape match, over budget). The LS2 Rapid III was demoted on fit risk, and the HJC i10 fallback is discontinued.</span></div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h3>Pants: the one unbought item</h3>
+              <p class="sub">Requirements set Oct 28: no denim, water-repellent is fine (no planned rain riding), sizes unknown so try-on matters; Japanese brands run small.</p>
+              <ul class="clean">
+                <li>
+                  <div><span class="item-name">KOMINE PK-7483</span>
+                  <span class="item-detail">Primary pick. Non-denim polyester, CE EN 1621-1 Level 2 knees, water-repellent, quick-dry. Spring-summer, no liner, no hip armor.</span></div>
+                  <div class="price">NT$3,499<small>~$109</small></div>
+                </li>
+                <li>
+                  <div><span class="item-name">KOMINE PK-929</span>
+                  <span class="item-detail">4-season upgrade: textile, removable waterproof and thermal liners, CE Level 2 knees.</span></div>
+                  <div class="price">NT$6,899</div>
+                </li>
+                <li>
+                  <div><span class="item-name">REV'IT Offtrack 2 H2O</span>
+                  <span class="item-detail">Waterproof backup option.</span></div>
+                  <div class="price">NT$5,200</div>
+                </li>
+                <li>
+                  <div><span class="item-name">US alternatives</span>
+                  <span class="item-detail">True Grit, $132 (CE Level 2 plus aramid, 30x30 in stock). Cortech AA, $150.</span></div>
+                  <span class="status open">Not bought</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="hunt-h">
+        <div class="sec-head"><h2 id="hunt-h">The bike hunt</h2><span>DCT only, frunk required, no exceptions on either</span></div>
+        <ul class="rules">
+          <li><b>The bike: 2014+ Honda NC700X DCT or NC750X DCT</b><span>2015 NC700X preferred. Dual-clutch automatic is a hard requirement, and the NC's built-in frunk storage is a deciding feature. The bike must not be able to stall at stops and must sit in 1st gear at a complete stop with no clutch lever held, hands fully off the bars.</span></li>
+          <li><b>Backup: Honda CBR650R E-Clutch (2024+)</b><span>The only US CBR with E-Clutch, and an absolute backup only, for the right price. E-Clutch confirmation required. A CTX700/CTX700N DCT counts only with about 20L or more of frunk-equivalent storage (saddlebags and/or top case). Scooters are out.</span></li>
+          <li><b>The money</b><span>Purchase budget $2,000 to $5,000. Asking-price ceiling $6,500 on all sources for the NC/CTX, dealers included (negotiation applies to dealers too); $8,500 for the CBR650R E-Clutch. Below-market asks get flagged: the goal is to pay below market.</span></li>
+          <li><b>The territory</b><span>Facebook Marketplace, Craigslist, and private sellers within 70 miles of Dublin, CA. Official dealership listings are in scope anywhere in Northern California, Fresno northward.</span></li>
+          <li><b>The sweep</b><span>A scan runs daily at about 9:14 AM PT and reports only new qualifying listings, NCs first, the CBR as backup. The first scan ran Mon, Nov 9.</span></li>
+        </ul>
+        <div class="sweep">
+          <span class="when">Latest sweep note · Mon, Nov 9, 2026</span>
+          <h3>Coyne call on a 2024 NC750X</h3>
+          <p>A call with Coyne about a 2024 NC750X DCT took place today at 12:02 PM. It is the newest lead in the hunt; asking price and outcome get recorded here as they firm up. No other new qualifying listing has been reported by the sweep yet.</p>
+        </div>
+      </section>
+
+      <footer>
+        <p>Road to Riding is a snapshot as of Tuesday, Nov 10, 2026, built from the course result, the Taiwan gear purchases, and the standing bike-hunt rules. The daily listing sweep reports new finds in the Motorcycle chat; this page is the state of the whole road in one look.</p>
+      </footer>
+    </div>
+  </body>
+</html>
